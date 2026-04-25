@@ -1,0 +1,9 @@
+numpy
+pillow
+opencv-python
+streamlit
+tensorflow>=2.16,<2.19; python_version < "3.13"
+fastapi
+uvicorn
+python-multipart
+scikit-learn
