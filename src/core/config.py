@@ -52,12 +52,13 @@ def load_runtime_config(app_config: AppConfig) -> RuntimeConfig:
     discovered_class_names = discover_dataset_classes(app_config.dataset_dir)
 
     if not app_config.metadata_path.exists():
-        fallback_class_names = discovered_class_names or list(app_config.class_names)
-        if not fallback_class_names:
-            raise FileNotFoundError(
-                "No metadata file found and no dataset classes discovered. "
-                "Run 'make train' first."
-            )
+        # Cloud deployments may not include dataset/metadata artifacts.
+        # Fall back to configured/default class names so app startup can continue.
+        fallback_class_names = (
+            discovered_class_names
+            or list(app_config.class_names)
+            or sorted(app_config.age_map.keys())
+        )
 
         return RuntimeConfig(
             class_names=fallback_class_names,
