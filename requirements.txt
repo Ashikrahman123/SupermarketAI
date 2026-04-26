@@ -2,7 +2,7 @@ numpy
 pillow
 opencv-python-headless
 streamlit
-tensorflow==2.18.0; python_version < "3.13"
+tensorflow==2.18.0
 fastapi
 uvicorn
 python-multipart
