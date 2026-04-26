@@ -3,7 +3,11 @@ from functools import lru_cache
 
 import numpy as np
 from PIL import Image
-import tensorflow as tf
+
+try:
+    import tensorflow as tf
+except ModuleNotFoundError:
+    tf = None  # type: ignore[assignment]
 
 EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 DATASET_DIR = Path("dataset")
@@ -17,6 +21,9 @@ def _normalized(vec: np.ndarray) -> np.ndarray:
 
 
 def _image_to_batch(img: Image.Image, image_size: tuple[int, int]) -> np.ndarray:
+    if tf is None:
+        raise ModuleNotFoundError("TensorFlow is required for hybrid embeddings.")
+
     resized = img.convert("RGB").resize(image_size)
     arr = np.array(resized, dtype=np.float32)
     arr = np.expand_dims(arr, axis=0)
@@ -24,7 +31,10 @@ def _image_to_batch(img: Image.Image, image_size: tuple[int, int]) -> np.ndarray
 
 
 @lru_cache(maxsize=2)
-def get_embedding_model(image_size: tuple[int, int]) -> tf.keras.Model:
+def get_embedding_model(image_size: tuple[int, int]):
+    if tf is None:
+        raise ModuleNotFoundError("TensorFlow is required for embedding model creation.")
+
     return tf.keras.applications.MobileNetV2(
         input_shape=image_size + (3,),
         include_top=False,
@@ -38,6 +48,10 @@ def build_class_centroids(
     image_size: tuple[int, int],
     dataset_dir: Path = DATASET_DIR,
 ) -> tuple[np.ndarray | None, dict[str, int]]:
+    if tf is None:
+        print("[HybridInference] TensorFlow unavailable; skipping centroid build and using model-only probabilities.")
+        return None, {}
+
     if not dataset_dir.exists():
         print(f"[HybridInference] Dataset directory not found: {dataset_dir}")
         return None, {}
@@ -85,6 +99,9 @@ def similarity_probs_for_image(
     image_size: tuple[int, int],
     centroids: np.ndarray | None,
 ) -> np.ndarray | None:
+    if tf is None:
+        return None
+
     if centroids is None:
         return None
 
