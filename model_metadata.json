@@ -1,0 +1,41 @@
+{
+  "class_names": [
+    "Baby products",
+    "Beauty",
+    "Grocery",
+    "Snacks",
+    "Stationaries",
+    "Toys",
+    "bakery",
+    "electronics",
+    "household"
+  ],
+  "image_size": [
+    224,
+    224
+  ],
+  "age_map": {
+    "Baby products": "0-5 years",
+    "Beauty": "13+ years",
+    "Grocery": "All ages",
+    "Snacks": "6+ years",
+    "Stationaries": "5-25 years",
+    "Toys": "3-12 years",
+    "bakery": "6+ years",
+    "electronics": "12+ years",
+    "household": "18+ years"
+  },
+  "confidence_threshold": 0.5,
+  "hybrid_alpha": 0.35,
+  "class_counts_train": {
+    "Baby products": 9,
+    "Beauty": 14,
+    "Grocery": 13,
+    "Snacks": 16,
+    "Stationaries": 16,
+    "Toys": 13,
+    "bakery": 12,
+    "electronics": 13,
+    "household": 13
+  }
+}

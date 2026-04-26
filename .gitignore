@@ -37,6 +37,8 @@ dist/
 *.tflite
 *.ckpt
 model_metadata.json
+!model.keras
+!model_metadata.json
 
 # Data artifacts
 dataset/
