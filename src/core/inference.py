@@ -3,7 +3,13 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageOps
-import tensorflow as tf
+
+try:
+    import tensorflow as tf
+    _TF_IMPORT_ERROR: Exception | None = None
+except ModuleNotFoundError as exc:
+    tf = None  # type: ignore[assignment]
+    _TF_IMPORT_ERROR = exc
 
 from hybrid_inference import build_class_centroids, similarity_probs_for_image
 from .config import AppConfig, RuntimeConfig, load_runtime_config
@@ -45,6 +51,12 @@ class InferenceEngine:
         self._centroid_counts = {}
 
     def get_model(self):
+        if tf is None:
+            raise ModuleNotFoundError(
+                "TensorFlow is not installed for the current Python runtime. "
+                "Use Python 3.12 on Streamlit Cloud (runtime.txt/.python-version)."
+            ) from _TF_IMPORT_ERROR
+
         if self._model is not None:
             return self._model
 
@@ -66,6 +78,11 @@ class InferenceEngine:
 
     @staticmethod
     def predict_with_tta(model, img: Image.Image, image_size: tuple[int, int]) -> np.ndarray:
+        if tf is None:
+            raise ModuleNotFoundError(
+                "TensorFlow is required for inference but is not available in this environment."
+            ) from _TF_IMPORT_ERROR
+
         rgb = img.convert("RGB")
         variants = [
             rgb,

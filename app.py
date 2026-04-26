@@ -1486,6 +1486,13 @@ try:
 except FileNotFoundError:
     st.error("No model file found (model.keras/model.h5). Run 'make train' first.")
     st.stop()
+except ModuleNotFoundError as exc:
+    st.error(
+        "TensorFlow is not available in this deployment environment. "
+        "For Streamlit Cloud, set Python to 3.12 using runtime.txt and .python-version, then redeploy."
+    )
+    st.caption(f"Details: {exc}")
+    st.stop()
 
 tab_analyzer, tab_dashboard = st.tabs(["AI Analyzer", "Interactive Dashboard"])
 
