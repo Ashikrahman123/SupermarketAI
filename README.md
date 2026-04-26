@@ -99,6 +99,14 @@ This is intentionally simple and explainable for college evaluation.
 
 ## Setup
 
+### Streamlit Cloud Deployment Note
+
+To run this app on Streamlit Cloud with TensorFlow, keep `runtime.txt` in the repository
+so deployment uses Python 3.12.
+
+If Python 3.13 is used, TensorFlow may not install and the app can fail at startup with
+`ModuleNotFoundError: No module named 'tensorflow'`.
+
 1. Create environment and install:
 
 ```bash
